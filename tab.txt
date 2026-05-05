@@ -1,0 +1,80 @@
+public OnPlayerClickPlayer(playerid, clickedplayerid, source)
+{
+player[playerid] = clickedplayerid;
+format(playtarget[playerid], MAX_PLAYER_NAME, "%s", RealName[player[playerid]]);
+if(PlayerInfo[playerid][pAdmin] >= 1 && PlayerInfo[playerid][pAdmin] <= 12 && PlayerInfo[player[playerid]][pAdmin] >= 13)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{00FFFF}Iнформацiя.", "{FFFF00}Обраний Гравець захищений !", "{00FF00}OK", "");
+return 1;
+}
+static string[128], strdln[1024];
+if(PlayerInfo[playerid][pAdmin] >= 1)
+{
+strdln = "{000080}Тп до нього {FFFF00}(1)\n\
+{800080}Тп його до себе {FFFF00}(2)\n\
+{008080}Спостерігати {FFFF00}(1)\n\
+{00FF00}Зняти спостереження {FFFF00}(1)\n\
+{00FF00}Поповнити життя і броню {FFFF00}(3)\n\
+{FF0000}Забанити Аккаунт {FFFF00}(6)\n\
+{FF00FF}Кік {FFFF00}(5)\n\
+{808080}Заблокувати {FFFF00}(2)\n\
+{00FF00}Розблокувати {FFFF00}(2)\n\
+{808080}Заморозити {FFFF00}(2)\n\
+{00FF00}Розморозити {FFFF00}(2)\n";
+strcat(strdln, "{800000}Вбити {FFFF00}(3)\n\
+{00FFFF}Заткнути {FFFF00}(2)\n\
+{00FF00}Посадити до в'язниці {FFFF00}(2)\n\
+{808080}Осліпити {00FF00}Увім{00FF00}/{FF0000}Вим {FFFF00}(4)\n\
+{000080}Тп себе в поліцейську дільницю {FFFF00}(1)\n\
+{FF00FF}Переглянути статистику {FFFF00}(1)\n\
+{00FFFF}Змінити скін {FFFF00}(3)\n\
+{00FF00}Забанити IP {FFFF00}(8)\n\
+{FF0000}Забанити на період {FFFF00}(6)\n\
+{800000}Дати підсрачника {FFFF00}(1)");
+format(string, sizeof(string), "{FFFF00}Адмін-меню. {FF0000}( %s [%d] )", playtarget[playerid], player[playerid]);
+ShowPlayerDialog(playerid, 5, DIALOG_STYLE_LIST, string, strdln, "{00FF00}Вибір", "{FF0000}Ще >>>");
+dlgcont[playerid] = 5;
+}
+else
+{
+if(!IsPlayerConnected(player[playerid]) || strcmp(playtarget[playerid], RealName[player[playerid]], false) != 0)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{FF0000}BOBBBO SERVER", "{FFFF00}Обраний гравець вийшов з сервера !", "{00FF00}OK", "");
+return 1;
+}
+if(playspa[player[playerid]] == 0)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{FF0000}BOBBBO SERVER", "{FFFF00}Неможна, Обраний гравець ще не заспавнився !", "{00FF00}OK", "");
+return 1;
+}
+if(perfrost[playerid] != 600)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{FF0000}BOBBBO SERVER", "{FFFF00}Неможна, Ви замороженi !", "{00FF00}OK", "");
+return 1;
+}
+if(PlayLock1[0][playerid] != 600)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{FF0000}BOBBBO SERVER", "{FFFF00}Неможна, Ви заблокованi !", "{00FF00}OK", "");
+return 1;
+}
+if(PlayerInfo[playerid][pPrisonsec] > 0)
+{
+ShowPlayerDialog(playerid, 2, DIALOG_STYLE_MSGBOX, "{FF0000}BOBBBO SERVER", "{FFFF00}У в'язницi це меню не працює !", "{00FF00}OK", "");
+return 1;
+}
+strdln = "{FFD700}Проглянути статистику :\n\
+{00FFFF}Надiслати повiдомлення :\n\
+{FF0000}Написати скаргу :\n\
+{00FF00}Переказати грошi :\n\
+{FF6600}Передати очки :\n\
+{000000}-----6\n\
+{000000}-----7\n\
+{000000}-----8\n\
+{000000}-----9\n\
+{FF00FF}Запросити в банду :";
+format(string, sizeof(string), "{FFFF00}Меню гравця : {FFFFFF}( %s [%d] )", playtarget[playerid], player[playerid]);
+ShowPlayerDialog(playerid, 90, DIALOG_STYLE_LIST, string, strdln, "{00FF00}Вибiр", "{FF0000}Вiдмiна");
+dlgcont[playerid] = 90;
+}
+return 1;
+}
